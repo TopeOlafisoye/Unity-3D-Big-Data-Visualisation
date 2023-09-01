@@ -1,5 +1,6 @@
 # Unity-3D-Big-Data-Visualisation
 Unity 3D Big Data Visualisation Prototype (Project)
+Here is a link to the full tutorial:https://sites.psu.edu/bdssblog/2017/04/06/basic-data-visualization-in-unity-scatterplot-creation/
 Introduction
 This guide is intended to illustrate from the ground up how to create a simple 3D scatterplot based of tabular data using the Unity game engine, for use in virtual reality (VR) experiences. This includes creating a Unity project, creating a prefab, loading a CSV (comma separated value) file, and assigning positions of objects according to values in the CSV. This guide assumes very little prior knowledge of Unity, but some basic programming skills (though theoretically you can copy and paste and it will work). Essentially, this is targeted as someone who is basically familiar with working with languages like R and Python, but has never used Unity or similar 3D software. For the bare understanding Unity you need to understand this guide, watching this two minute video will give a usable overview of the interface nomenclature.
 
@@ -67,24 +68,6 @@ Note: It is very important the name of the script file matches the name of the C
 
 Okay, open up the script. This will mean a new program will open up, probably Monodevelop, but maybe Visual Studio (depending on what you chose to install). In the window, you should find some very plain code:
 
- 
-
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -101,6 +84,7 @@ public class CSVReader : MonoBehaviour {
   
  }
 }
+
 First, it declares namespaces at the top for access to various other classes. If you are used to R or Python, these are roughly analogous to packages, giving you access to various pre-made functions. As noted, the class name defined here must match the name of the script. We can use it to reference the methods we define in this script in others (like in our case to connect to a the script that places our points in the scatterplot). Two functions are included by default, Start () and Update(). Start runs when the game is started, while Update runs every rendered “frame” (think video/movie frames). Others exist for more specialized purposes.
 
 In our case, all we need to do is take Ikonen’s code and paste it in, replacing all existing code, and save it. If you are curious about how it works, I have a commented version of his code uploaded on github here.
@@ -122,22 +106,6 @@ In order to plot the points, we need a script that gets the values from the CSVP
 
 To start, create another C# Script (in Project, right-click -> Create -> C# Script) titled something appealing, like DataPlotter, and open it in your development environment of choice. It will look very familiar:
 
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -156,26 +124,7 @@ public class DataPlotter : MonoBehaviour {
 }
 First, we need to make sure we can get our input file read using our CSVReader script. To do this, we need a variable to hold the name of the file, a variable to hold the data that the script outputs, and the code to run the other script and populate set that variable. Delete the Update() function as we will not be needing it. Namespaces are omitted here for space.
 
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
+
 public class DataPlotter : MonoBehaviour {
  
  // Name of the input file, no extension
@@ -217,14 +166,7 @@ While this does not neatly print our data, it does show that our data was loaded
 Step 2: Setting up Column Names
 To actually begin printing meaningful things (that we can also store and use for displaying our data), we need to do a little conversion. This code goes right after the Debug.Log() in the previous code block, within the Start() function:
 
-1
-2
-3
-4
-5
-6
-7
-8
+
 // Declare list of strings, fill with keys (column names)
         List<string> columnList = new List<string>(pointList[1].Keys);
  
@@ -233,6 +175,8 @@ To actually begin printing meaningful things (that we can also store and use for
  
  foreach (string key in columnList)
  Debug.Log("Column name is " + key);
+
+ 
 pointList[1].Keys is technically the list of “keys” of the index 1 Dictionary in pointList. These are the column names within the CSV. These are counted and printed, and then each column name is printed via a foreach loop. If you hit the play button, the console should fill with the following:
 
 
@@ -243,16 +187,7 @@ What that lets us do is designate which column we want graphed by its index, rat
 
 These should go below the existing variables, but before the Start() function:
 
-1
-2
-3
-4
-5
-6
-7
-8
-9
-// Indices for columns to be assigned
+//Indices for columns to be assigned
  public int columnX = 0;
  public int columnY = 1;
  public int columnZ = 2;
@@ -265,14 +200,12 @@ Keep in mind that here we have some values assigned to the columns. This ensures
 
 The next block actually assigns these variables. Within the Start() function, after the last Debug.Log(). Keep in mind this needs to be after the creation of columnList, because it relies on that variable to be populated:
 
-1
-2
-3
-4
+
 // Assign column name from columnList to Name variables
  xName = columnList[columnX];
  yName = columnList[columnY];
  zName = columnList[columnZ];
+ 
 What this does is take the string within columnList, at the index specified by the column variables, and assign it to the Name variables.
 
 Save and go back to the Editor, and hit Play. Select the Plotter GameObject and look in the Inspector. You should see the fields populated (if not, you may need to exit Play mode, then manually input the Column values), like so:
@@ -283,53 +216,7 @@ Note that Column X has no name… which is true, it doesn’t in our data! Try e
 
 You entire DataPlotter script should now look like this:
 
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -382,8 +269,7 @@ Before placing our points, we first need to associate the prefab DataBall we mad
 
 First, we need to let our script know what the prefab is it will be placing. To do this, we need to declare a public GameObject variable within the script, like this (place it just below our other variables, but above Start() ):
 
-1
-2
+
 // The prefab for the data points to be instantiated
  public GameObject PointPrefab;
 Save your script and go back to the Editor, and look at Plotter again. There is now another field open in the Inspector, under our Column and Names variables. It has some text, with a little circle next to it:
@@ -402,8 +288,7 @@ Placing a clone of DataBall means instantiating it. Three pieces of information 
 
 For now, we can leave the position and rotation at zero (Quaternion.identity is shorthand for zero rotation), like so:
 
-1
-2
+
 //instantiate prefab
 Instantiate(PointPrefab, new Vector3(0,0,0), Quaternion.identity);
 Note that this code needs to be within the Start() function in order to run, preferably at the end (for now).
@@ -419,18 +304,7 @@ To do this, we need to loop through every row, get the value at each column posi
 
 This code will replace the Instantiate() code above, but still be within Start(). It needs to be after where the Name variables are assigned.
 
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
+
 //Loop through Pointlist
  for (var i = 0; i < pointList.Count; i++)
  {
@@ -455,70 +329,6 @@ Try changing the column values (and remember to start/stop Play) and see what ha
 
 To recap, your full DataPlotter script should look like this:
 
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
-48
-49
-50
-51
-52
-53
-54
-55
-56
-57
-58
-59
-60
-61
-62
-63
-64
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -598,11 +408,7 @@ Much like before, we simply need to declare a GameObject variable in our script 
 
 Here is where things get slightly more involved. In short, instead of just calling Instantiate() in our loop, we need to set it to a new GameObject. By setting it to a new GameObject, we can more easily manipulate the attributes of each prefab right after its made. This code replaces the previous Instantiate() line.
 
-1
-2
-3
-4
-5
+
 // Instantiate as gameobject variable so that it can be manipulated within loop
  GameObject dataPoint = Instantiate(
  PointPrefab, 
@@ -610,19 +416,14 @@ Here is where things get slightly more involved. In short, instead of just calli
  Quaternion.identity);
 Now we can assign it to be the child of our our PointHolder object. In Unity, this entails making the Transform component of our newly generated prefab (dataPoint) a Child of PointHolder’s transform. Remember, order is important, so this code needs to be after you instantiate the object.
 
-1
-2
+
 // Make dataPoint child of PointHolder object 
  dataPoint.transform.parent = PointHolder.transform;
 Remember that Transform is also the thing determines position in the Hierarchy in addition to 3D location/rotation/scaling. What this means is that anything affecting the Transform of the Parent will also affect the Children (relative to the Parent).
 
 We can do just a simple thing and give our prefab clones a more meaningful name, like the actual values they represent:
 
-1
-2
-3
-4
-5
+
 // Assigns original values to dataPointName
  string dataPointName = 
  pointList[i][xName] + " "
@@ -638,94 +439,7 @@ Save and return to the Editor, Play, and check that the points are neatly nested
 
 Your entire script should look like this:
 
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
-48
-49
-50
-51
-52
-53
-54
-55
-56
-57
-58
-59
-60
-61
-62
-63
-64
-65
-66
-67
-68
-69
-70
-71
-72
-73
-74
-75
-76
-77
-78
-79
-80
-81
-82
-83
-84
-85
-86
-87
-88
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -832,21 +546,7 @@ I won’t walk through it line by line, but here is the method FindMaxValue() to
 
 Place these functions into its own Method, after Start(), but within the last curly bracket (i.e., within the DataPlotter class). Note that we could place almost all our code within separate methods, which would be preferred for most projects, but we are keeping much of our code within Start() so that it is more readable.
 
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
+
 private float FindMaxValue(string columnName)
 {
     //set initial value to first value
@@ -894,15 +594,7 @@ private float FindMinValue(string columnName)
    }
 From now on, we can just refer to these methods within our Start() function. Knowing they take the columnName, we can give it our existing string variables something-Name, and store the results in new floats.
 
-1
-2
-3
-4
-5
-6
-7
-8
-9
+
 // Get maxes of each axis
  float xMax = FindMaxValue(xName);
  float yMax = FindMaxValue(yName);
@@ -914,15 +606,7 @@ From now on, we can just refer to these methods within our Start() function. Kno
  float zMin = FindMinValue(zName);
 Now all we need to do is work a little math magic to calculate the normalized position of the points: (i -min)/(max-min). This code then can replace the existing code for defining the x, y, and z floats within Start():
 
-1
-2
-3
-4
-5
-6
-7
-8
-9
+
 // Get value in poinList at ith "row", in "column" Name, normalize
 float x = 
 (System.Convert.ToSingle(pointList[i][xName]) - xMin) / (xMax - xMin);
@@ -934,14 +618,11 @@ float z =
 (System.Convert.ToSingle(pointList[i][zName]) - zMin) / (zMax - zMin);
 One more thing: it would be nice to be able to change the scale of the graph, meaning how far in space the maximum points go, so let’s quickly create a variable to do that, defined at the top of the script with the other variables.
 
-1
+
 public float plotScale = 10;
 Then we can just add that variable to our Instantiate code, so that it becomes:
 
-1
-2
-3
-4
+
 GameObject dataPoint = Instantiate(
                     PointPrefab, 
                     new Vector3(x, y, z)* plotScale, 
@@ -956,9 +637,7 @@ Obviously, our plot is a little drab. Fortunately, we only need one line of code
 
 Conveniently, we already have x, y, z in our rendering loop in that format.  We can use them to create a new color (we can just leave Alpha at 1), and then assign it as the color of the prefab dataPoint, to override the default color. That code looks like this:
 
-1
-2
-3
+
 // Gets material color and sets it to a new RGBA color we define
  dataPoint.GetComponent<Renderer>().material.color = 
  new Color(x,y,z, 1.0f);
@@ -970,145 +649,7 @@ Now (after saving and hitting Play in the Editor), you can see our fancily color
 
 Finally, our code should look like this:
 
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
-48
-49
-50
-51
-52
-53
-54
-55
-56
-57
-58
-59
-60
-61
-62
-63
-64
-65
-66
-67
-68
-69
-70
-71
-72
-73
-74
-75
-76
-77
-78
-79
-80
-81
-82
-83
-84
-85
-86
-87
-88
-89
-90
-91
-92
-93
-94
-95
-96
-97
-98
-99
-100
-101
-102
-103
-104
-105
-106
-107
-108
-109
-110
-111
-112
-113
-114
-115
-116
-117
-118
-119
-120
-121
-122
-123
-124
-125
-126
-127
-128
-129
-130
-131
-132
-133
-134
-135
-136
-137
-138
-139
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -1301,3 +842,4 @@ At the beginning, I mentioned deployment to different platforms. This involved �
 
 Conclusion
 This guide is meant to give a taste of Unity for data visualization, and illustrate many of the idiosyncrasies that need to be dealt with in order to use Unity for displaying data. While at present, few tools exist to quickly and easily create data graphics in the variety of VR technology we have today. But, hopefully it won’t be long until this post is a quaint reminder of how things used to be.
+
