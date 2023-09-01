@@ -17,15 +17,20 @@ First, you will need to make a Unity account and download the latest version of 
 
 Once you have Unity installed, open it up and you will be greeted by a window (create a new account/login if necessary). You want to create a new project, which takes you to the following window. Pick a name for your project, make sure it is “3D,” and select a location to save it. This will create a whole file hierarchy for the project.
 
+****![image](https://github.com/TopeOlafisoye/Unity-3D-Big-Data-Visualisation/assets/129410519/d907f6b3-3f8b-4105-8e6a-4fc9487cc145)
 
 
 One useful thing to do is add the Standard Assets package under Add Asset Package, as shown in the screenshot below. It contains a variety of useful assets for testing/prototyping such as sample 3D models and basic interaction features. We will be using some of those assets at the very end of this guide.
 
 
+![image](https://github.com/TopeOlafisoye/Unity-3D-Big-Data-Visualisation/assets/129410519/cf65c55b-3a9f-45a5-932d-dafecac27ff1)
+
 
 Once you hit Create Project Unity will dutifully create the project. It may take some time to complete, as Standard Assets needs to be downloaded and unpacked. You will then be greeted by the Unity interface, which looks like this:
 
-I again recommend taking a look at this video for a very short overview of the interface if you haven’t used Unity before or need a refresher, but in short:
+![image](https://github.com/TopeOlafisoye/Unity-3D-Big-Data-Visualisation/assets/129410519/38a6d3f8-dc49-4ca4-9a34-71330bc401b6)
+
+I again recommend taking a look at this video:https://unity3d.com/learn/tutorials/topics/interface-essentials/interface-overview?playlist=17090 for a very short overview of the interface if you haven’t used Unity before or need a refresher, but in short:
 
 The Hiearchy window shows the “GameObject” that exist in the scene. By default there is a “camera” and a “directional light”.
 The center panel defaults to the scene view. This is how you navigate in 3D space (full list of hotkeys here, Mousewheel/Q is Pan, W goes back to default, Alt pivots, right click rotates view)
@@ -35,8 +40,13 @@ The Project folder shows you the assets/scripts of the project and is basically 
 The Console, which works much like any other development environment, notifying you of errors and allowing things to be printed to it through Debug.Log( example: Debug.Log(“Hello world”); )
 Each window can be dragged to reposition and resized, and you can select from several precooked layouts in Window -> Layouts at the top of the main window. The one pictured above is “default,” but I recommend placing the Console window in a place where it is always visible. Note that since Standard Assets do not update with each Unity version the console will be full of warnings and/or errors. Generally you can ignore these or hit clear to erase them. If they give you too much trouble, you can go ahead delete the Standard Assets folder, since it is not core to anything we will be doing.
 
-Adding GameObjects
+**Adding GameObjects**
+
 In order to create a scatterplot, we need points to represent the data. There are many ways to do this, but one of the more straightforward ways is to use a Sphere, on of Unity’s built-in 3D assets, and turn it into what’s called a “prefab,” essentially a template object than can be cloned and modified as needed.
+
+
+![image](https://github.com/TopeOlafisoye/Unity-3D-Big-Data-Visualisation/assets/129410519/1f6effcd-f46e-4568-b36a-5a8620b58d1d)
+
 
 To make a prefab, add a sphere to your scene by selecting GameObject -> 3D Object -> Sphere at the top of the main window. The sphere should now be visible in the Hierarchy and in the Scene view, and should be selected (has arrows pointing out of it), as in the screenshot below.
 
@@ -49,8 +59,14 @@ The Mesh is the actual 3D model.
 The Collider is the boundary of the object for simulated physical interactions.
 The Mesh Renderer controls how the model is rendered (displayed), such as how it is affected by light (e.g., if it can cast shadows).
 The Material contains the texture information, or how the model is “painted.”
-Creating a prefab
+
+**Creating a prefab**
+
 We need to turn the sphere into a prefab, so we can create clones of it on demand for our scatterplot. First, select the sphere and change its to be .25 in x, y, z, since the default size is too large for our purposes. This can be done by either changing the values in the inspector (under Transform), or by selecting the scale tool button in the top left corner of the main unity window and manipulating it in the scene window.
+
+
+![image](https://github.com/TopeOlafisoye/Unity-3D-Big-Data-Visualisation/assets/129410519/ccadb4b3-e681-4b05-b191-9aae356bbb85)
+
 
 Then, create a prefab object by right-clicking in the Project window, under Assets, and selecting Create -> Prefab in the menu that opens up, and name it something meaningful, like DataBall.
 
