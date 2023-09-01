@@ -3,7 +3,9 @@ Unity 3D Big Data Visualisation Prototype (Project)
 Here is a link to the full tutorial:https://sites.psu.edu/bdssblog/2017/04/06/basic-data-visualization-in-unity-scatterplot-creation/
 
 
-Introduction
+**Introduction**
+
+
 This guide is intended to illustrate from the ground up how to create a simple 3D scatterplot based of tabular data using the Unity game engine, for use in virtual reality (VR) experiences. This includes creating a Unity project, creating a prefab, loading a CSV (comma separated value) file, and assigning positions of objects according to values in the CSV. This guide assumes very little prior knowledge of Unity, but some basic programming skills (though theoretically you can copy and paste and it will work). Essentially, this is targeted as someone who is basically familiar with working with languages like R and Python, but has never used Unity or similar 3D software. For the bare understanding Unity you need to understand this guide, watching this two minute video will give a usable overview of the interface nomenclature.
 
 Unity (or Unity 3D) is a game engine built for making games. It can create games and other experiences for web, PC, Android, iOS, etc, etc. Importantly for VR research, it makes working with VR technology like Oculus Rift or HTC Vive fairly straightforward. Unity projects themselves are essentially composed of content (assets), scripts (the programming), and the engine itself which smashes everything together and makes it work on your particular platform. The completed project this guide sets up is uploaded to GitHub here for reference.
