@@ -111,16 +111,21 @@ In our case, all we need to do is take Ikonen’s code and paste it in, replacin
 
 We can leave this script alone for the remainder of the guid, since we will be referencing (i.e., running) the function it contains in another script.
 
-Getting some data
+**Getting some data**
+
+
 First, to get Unity to read the CSV, we need to create a folder called Resources under Assets within the Project window. Make sure the naming is exact, since a folder with the name Resources has a special meaning for Unity (it allows for simple direct references to assets rather than manually associating them in the editor).
 
 Think very hard about what dataset you want to graph. Now stop thinking, because I have something cooked up already: the iris dataset (wikipedia). You can download my cleaned up version here: iris.csv. To get it, I exported it from R in Rstudio using this code (getting rid of the quotes is not necessary but makes for cleaner display):
 
 # Write without quotes
 write.csv(iris, file = "iris.csv", quote = FALSE)
+
 Okay, now make sure the iris.csv is in the Resources folder (and make sure it is actually named that). You can drag and drop it into the Project window as if it were an OS file window, or you can actually right-click on the folder and select the option to view it in your OS file system (“Show in Explorer” on Windows), and then put the file there like any other. Whenever you import a new file, Unity will take a moment to import it, which involves creating some additional Unity-specific metadata.
 
-Plotting the Points
+**Plotting the Points**
+
+
 Step 1: Loading the Data
 In order to plot the points, we need a script that gets the values from the CSVParser script, turns those values into XYZ coordinates, and then creates a clone of our prefab DataBall at that location.
 
@@ -174,6 +179,9 @@ Warning: Make sure you are not in “Play mode” (that the buttons at the top a
 You should now be able to select Plotter in the Hierarchy and see the script in the Inspector, like this:
 
 
+![image](https://github.com/TopeOlafisoye/Unity-3D-Big-Data-Visualisation/assets/129410519/ec2fb55f-9d4d-4352-a436-6dfbd02d9c50)
+
+
 As you can see, there is a field for Inputfile, which we defined within the script. Go ahead and put the name of the CSV, minus file extension, into that field (in our case, iris).
 
 Now, hit the big play button at the top of the screen and look at the Console (I recommend setting it to “Clear on Play”). The last entry should be something like:
@@ -183,7 +191,8 @@ UnityEngine.Debug:Log(Object)
 DataPlotter:Start() (at Assets/DataPlotter.cs:18)
 While this does not neatly print our data, it does show that our data was loaded (it is a List that contains Dictionaries), and that it came from line 18 of the DataPlotter.cs script.
 
-Step 2: Setting up Column Names
+**Step 2: Setting up Column Names**
+
 To actually begin printing meaningful things (that we can also store and use for displaying our data), we need to do a little conversion. This code goes right after the Debug.Log() in the previous code block, within the Start() function:
 
 
@@ -199,6 +208,8 @@ To actually begin printing meaningful things (that we can also store and use for
  
 pointList[1].Keys is technically the list of “keys” of the index 1 Dictionary in pointList. These are the column names within the CSV. These are counted and printed, and then each column name is printed via a foreach loop. If you hit the play button, the console should fill with the following:
 
+
+![image](https://github.com/TopeOlafisoye/Unity-3D-Big-Data-Visualisation/assets/129410519/21c0e805-f145-42a2-baed-d5bd2e2529e3)
 
 
 Okay, we have a list of column names we can use to reference points within pointList in order to get the coordinates for the data points.
@@ -230,6 +241,8 @@ What this does is take the string within columnList, at the index specified by t
 
 Save and go back to the Editor, and hit Play. Select the Plotter GameObject and look in the Inspector. You should see the fields populated (if not, you may need to exit Play mode, then manually input the Column values), like so:
 
+
+![image](https://github.com/TopeOlafisoye/Unity-3D-Big-Data-Visualisation/assets/129410519/d4c96ee2-05e9-4c12-9667-6afcd620b5a9)
 
 
 Note that Column X has no name… which is true, it doesn’t in our data! Try exiting play mode, changing the columns to 1, 2, 3, and hitting play again to see how it updates. Also note that you can put in nonsense into the Names fields, and it just gets overwritten by the script (since you just told it to get new names from columnList).
@@ -284,7 +297,9 @@ public class DataPlotter : MonoBehaviour {
  
  }
 }
-Step 3: Instantiating the Prefab
+
+**Step 3: Instantiating the Prefab**
+
 Before placing our points, we first need to associate the prefab DataBall we made with our script, then direct the script to instantiate (make a clone).
 
 First, we need to let our script know what the prefab is it will be placing. To do this, we need to declare a public GameObject variable within the script, like this (place it just below our other variables, but above Start() ):
@@ -295,9 +310,13 @@ First, we need to let our script know what the prefab is it will be placing. To 
 Save your script and go back to the Editor, and look at Plotter again. There is now another field open in the Inspector, under our Column and Names variables. It has some text, with a little circle next to it:
 
 
+![image](https://github.com/TopeOlafisoye/Unity-3D-Big-Data-Visualisation/assets/129410519/c69a2449-a012-46a6-87af-ebd970dce633)
+
 
 To populate it, all you need to do is drag the DataBall prefab we created from the Project window to that field. It should look like this:
 
+
+![image](https://github.com/TopeOlafisoye/Unity-3D-Big-Data-Visualisation/assets/129410519/bf61842b-f2d5-4cb9-8fbe-2a008115366e)
 
 
 Now, our script “knows” about DataBall, but right now it is doing nothing with it.
@@ -317,7 +336,8 @@ Once you save, go back to the Editor, and hit Play, you should see DataBall appe
 
 Feel free to change the values within the Vector3 to other values, such as 1, 3, 4, and saving and hitting Play to see how the position it spawns at moves.
 
-Step 3: Looping and Instantiating
+**Step 3: Looping and Instantiating**
+
 Now that we know how to instantiate a DataBall, we need to instantiate one for each row in our table, according to the values in the three columns we have selected.
 
 To do this, we need to loop through every row, get the value at each column position, then use those values as the coordinates to instantiate our DataBall.
@@ -343,6 +363,8 @@ I want to point out that System.Convert.ToSingle simply ensures the value given 
 
 Once you save and hit Play, you should have a whole mess of Clones in your hierarchy, and a cloud of data points in your Game/Scene view, as shown below. Remember, at the moment these points are assigned according the values in the CSV, so aren’t necessarily going to be around the origin (0,0,0). To get a better look, you can go into the scene view tab and navigate around.
 
+
+****![image](https://github.com/TopeOlafisoye/Unity-3D-Big-Data-Visualisation/assets/129410519/b84484d9-8d18-409a-b824-683384035d71)
 
 
 Try changing the column values (and remember to start/stop Play) and see what happens. Warning: if you put in a column that does not exist (like 12), or if the column is full of strings (like 5), nothing will be plotted and there will be an error in the console. Essentially, make sure you are giving the script numerical data, or it won’t work.
@@ -413,15 +435,17 @@ public class DataPlotter : MonoBehaviour {
  }
   
 }
-Cleanup: Instantiating Clones as Children
+
+**Cleanup: Instantiating Clones as Children**
+
+
 Right now, we dump a series of clones in the Hierarchy, which is messy. What would be better is to instantiate clones as a child of another object in the Hierarchy, which is both neater in terms of organization and lets you manipulate all the points at once by manipulating the parent object.
 
 First, create an empty GameObject by right-clicking in the Hierarchy, and selecting Create Empty, and give it a name like PointHolder.
 
 Now that we have this object ready to go, we need to make space for it in our script.
 
-1
-2
+
 // The prefab for the data points that will be instantiated
  public GameObject PointPrefab;
 Much like before, we simply need to declare a GameObject variable in our script (and save the script!), then drag our PointHolder object from the Hierarchy into the newly empty slot in the Inspector (make sure to select Plotter in the Hierarchy).
@@ -451,8 +475,7 @@ We can do just a simple thing and give our prefab clones a more meaningful name,
  + pointList[i][zName];
 Then of course, we actually need to give the string dataPointName to dataPoint, which is done like so (name is another property of Transform):
 
-1
-2
+
 // Assigns name to the prefab
  dataPoint.transform.name = dataPointName;
 Save and return to the Editor, Play, and check that the points are neatly nested in the Hierarchy and have their new names assigned.
@@ -548,7 +571,9 @@ public class DataPlotter : MonoBehaviour
     }
  
 }
-Normalizing the Values for Display
+
+**Normalizing the Values for Display** 
+
 Right now, our data is placed according to the raw value in the file. This isn’t very flexible, since if you are dealing with a different dataset with values in the hundreds or thousands, the graph will be that large. This becomes very important when implementing interaction, particularly in VR, since you don’t really want people to have to walk a mile to just look at the graph.
 
 To do this, we will scale all values to between 0-10 before using them as coordinates for instantiating our dataBalls. First, we need to find the minimum and maximum values per-column. We can then work a little math with our raw values to get them into our 0-10 range.
@@ -561,7 +586,9 @@ First, some housekeeping: we will be using Convert.ToSingle a lot. Currently, we
 using System;
 Now we can just use Convert.ToSingle by itself, which makes the code a little cleaner. Next, onto the implementation
 
-Find Maximums and Minimums
+
+**Find Maximums and Minimums**
+
 I won’t walk through it line by line, but here is the method FindMaxValue() to find the maximum value in a column in our pointList. In essence, it takes the column name as the argument (string columnName) and returns the maximum value as a float (private float). It does this by looping through the particular Dictionary (column), and overwriting the value it has if it finds a bigger one. Keep in mind that it assumes that pointList is defined, which is fine for our purposes, but means it would need to be modified to be extensible.
 
 Place these functions into its own Method, after Start(), but within the last curly bracket (i.e., within the DataPlotter class). Note that we could place almost all our code within separate methods, which would be preferred for most projects, but we are keeping much of our code within Start() so that it is more readable.
@@ -584,20 +611,7 @@ private float FindMaxValue(string columnName)
 }
 Similarly, here is the code for finding the minimum value. Place it after the block for the FindMaxValue, and make sure all your curly bracket make sense- remember, these are separate methods, at the same level as Start().
 
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
+
 private float FindMinValue(string columnName)
    {
  
@@ -650,9 +664,12 @@ GameObject dataPoint = Instantiate(
 Save and return to the Editor. Hit Play, and if all your curly brackets are right (probably won’t be the first time), you should see all the points in their new positions. Try exiting play mode and changing the columns they represent in the Inspector for Plotter. The positions of the DataBalls will not exceed 10 in any axis, a value you can alter by changing the plotScale variable we created (but you will need to exit and re-enter play mode) in the Inspector.
 
 
+![image](https://github.com/TopeOlafisoye/Unity-3D-Big-Data-Visualisation/assets/129410519/4e0c7aa1-9d1e-4981-9130-32e18e4f77a3)
 
 
-Adding Color
+
+**Adding Color**
+
 Obviously, our plot is a little drab. Fortunately, we only need one line of code in order to dynamically assign color to our DataBall prefabs as we instantiate them. This is because we already have normalized values created for x, y, z in 3D world space that we can instead map to red, blue, green in RGB color space. There are several ways to define color in Unity, but the most straightforward way is as a set of four floats with values between 0-1, one for red, one for green, one for blue, and one for Alpha (transparency).
 
 Conveniently, we already have x, y, z in our rendering loop in that format.  We can use them to create a new color (we can just leave Alpha at 1), and then assign it as the color of the prefab dataPoint, to override the default color. That code looks like this:
@@ -665,6 +682,8 @@ Note the syntax is a little different because we need to actually get the Materi
 
 Now (after saving and hitting Play in the Editor), you can see our fancily colored DataBalls, like so:
 
+
+****![image](https://github.com/TopeOlafisoye/Unity-3D-Big-Data-Visualisation/assets/129410519/3341146b-6e32-4852-bf4d-0637a310359a)
 
 
 Finally, our code should look like this:
@@ -809,7 +828,9 @@ public class DataPlotter : MonoBehaviour {
     }
  
 }
-Exploring your Data
+
+**Exploring your Data**
+
 So far we’ve been looking at our data largely through the view of the camera when you hit play, which is not very dynamic. While going ahead and implementing VR technology is beyond the scope of this guide, we can emulate a VR-ish experience by adding a controllable camera. We can use a prefab player controller from Standard Assets, which allows you to wander around the environment like standard first-person game. If you did not download Standard Assets at the very beginning, you can go to the Asset Store window, search for Standard Assets, and download them from there (there will be a few windows asking about import settings, but the defaults are safe and you can agree to the prompts).
 
 Before we add the prefab, we need to create a ground to walk on, or our FPS controller will fall through to infinity. Reminder: make sure you are not in play mode!
@@ -819,17 +840,25 @@ We do this by adding a Plane to our scene, through Game Object -> 3D Object -> P
 Next add the prefab FPS controller by dragging it from the Project window into the Scene (make sure it’s on the plane!). It’s located in Standard Assets -> Characters -> FirstPersonCharacter -> FPSController.prefab. Also make sure it’s above the plane, or it might fall through.
 
 
+![image](https://github.com/TopeOlafisoye/Unity-3D-Big-Data-Visualisation/assets/129410519/29fa7c4e-c36e-4a22-8e25-68400eb1584a)
+
 
 Your scene should look like this:
 
+
+![image](https://github.com/TopeOlafisoye/Unity-3D-Big-Data-Visualisation/assets/129410519/e4619c20-1372-46d7-b03e-04525cec5468)
 
 
 Now disable the Main Camera, which you can do by unchecking it in the Inspector (a little box near the top, pictured below), since it will clash with the camera attached to the FPSController.
 
 
+![image](https://github.com/TopeOlafisoye/Unity-3D-Big-Data-Visualisation/assets/129410519/a5802226-f546-4e9b-aa89-76ede76b2dd5)
+
 
 Okay, now finally hit Play! You should be able to walk around the environment freely by using the WASD or the arrow keys to move, and looking around with the mouse. These controls should seem very familiar if you have played a first person shooter game. You can even press spacebar to jump on top of the dataPoints!
 
+
+![image](https://github.com/TopeOlafisoye/Unity-3D-Big-Data-Visualisation/assets/129410519/7e41c1a1-9359-42af-8cd7-5a1213414b0d)
 
 
 **Little Things (Aesthetics)**
@@ -837,6 +866,8 @@ If you haven’t noticed, having a white ground is pretty jarring, and our bluis
 
 To get a prettier ground, we can just apply one of the existing materials in Standard Assets that we have downloaded. Personally, I like NavyGrid, which is contained within Standard Assets -> Prototyping -> NavyGrid. To assign it to our plane, all you need to do is drag it from the Project window onto the Plane in the Hierarchy. Your plane should instantly update to look like this:
 
+
+![image](https://github.com/TopeOlafisoye/Unity-3D-Big-Data-Visualisation/assets/129410519/29d2f65a-1420-4202-87e0-638f07f02499)
 
 
 Feel free to manipulate the options of the Material in the Inspector, either by selecting the Material itself, or selecting the plane. For example, I made my plane a little darker by picking a darker color in Albedo (click the colored square by the little eyedropper symbol).
@@ -846,20 +877,25 @@ To change the sky color is more counterintuitive. It’s actually a property of 
 First, you need to change the Clear Flags option to “Solid Color” from “Skybox,” and then set the Background by clicking on the colored bar.(I prefer solid black for contrast, but you can pick whatever you want). Once set, it should look like this:
 
 
+![image](https://github.com/TopeOlafisoye/Unity-3D-Big-Data-Visualisation/assets/129410519/0cb8b4a0-dbc2-4f00-928b-5e1a3f8bb25d)
+
 
 Now when you run your script, you are given a more modern scene, ripe for screenshots, or amazing your friends.
 
 
+![image](https://github.com/TopeOlafisoye/Unity-3D-Big-Data-Visualisation/assets/129410519/79c4dbfa-f9b6-45bf-a960-fd2d4139a6c9)
 
-Extensions
+
+**Extensions**
+
 You may have noticed we are still missing some important components of a real plot, such as labels and axes for reference. These are not difficult to make, but are time consuming, and I won’t be covering them here. If you wish to make your own labels, we already have much of the information coded in our script. To create labels, you will need to add 3D Text (Game Object -> 3D Object -> 3D Text), give that object a specific name, such as X_Title, and add code in your script to find that object by name and change the text (via TextMesh), which looks like the following:
 
-1
+
 GameObject.Find("X_Title").GetComponent<TextMesh>().text = xName;
 Similarly, we have mins and maxes already stored, so it is largely a matter of placing 3D Text GameObjects at the extent of our graph area, which is defined by plotScale.
 
 At the beginning, I mentioned deployment to different platforms. This involved “Building” your project, and how you build your project depends on your target platform, something that is out of scope for this guide, but not too difficult to find documentation on.
 
-Conclusion
+**Conclusion**
 This guide is meant to give a taste of Unity for data visualization, and illustrate many of the idiosyncrasies that need to be dealt with in order to use Unity for displaying data. While at present, few tools exist to quickly and easily create data graphics in the variety of VR technology we have today. But, hopefully it won’t be long until this post is a quaint reminder of how things used to be.
 
