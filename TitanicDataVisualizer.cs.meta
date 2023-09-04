@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7bde715b9d60c2b468be3d4d7ba027e0
+timeCreated: 1691682498
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - dataPointPrefab: {fileID: 1103527760695654, guid: f651331ec8b2b0d43abf2f06b702bd1f,
+      type: 2}
+  - dataPointsParent: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
