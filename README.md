@@ -2,6 +2,7 @@
 Unity 3D Big Data Visualisation Prototype (Project)
 Here is a link to the full tutorial:https://sites.psu.edu/bdssblog/2017/04/06/basic-data-visualization-in-unity-scatterplot-creation/ if i missed anything
 
+Note: Download Unity verision 2017.1.0f3 to use this unity package
 
 **Introduction**
 
